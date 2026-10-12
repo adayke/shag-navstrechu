@@ -1,3 +1,4 @@
+import { Star } from 'lucide-react';
 import { useState } from 'react';
 import { useStore, today } from '../state/store.jsx';
 import { go } from '../state/router.js';
@@ -47,7 +48,7 @@ export default function Observe({ params }) {
         </select>
 
         <label className="f">{t.fGoal}</label>
-        <div>{t.GOALS.map((g, i) => <Chip key={i} on={i === f.goal} onClick={() => set({ goal: i })}>{k.goals.includes(i) ? '★ ' : ''}{g}</Chip>)}</div>
+        <div>{t.GOALS.map((g, i) => <Chip key={i} on={i === f.goal} onClick={() => set({ goal: i })}>{k.goals.includes(i) && <Star size={13} fill="currentColor" aria-hidden="true" style={{ marginRight: 5 }} />}{g}</Chip>)}</div>
 
         <label className="f">{t.fHow}</label>
         <div className="scale">

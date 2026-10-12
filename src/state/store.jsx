@@ -7,7 +7,7 @@ import { demoState } from '../data/demo.js';
 
 const DICT = { ru, kk };
 const LESSONS = { ru: lessonsRu, kk: lessonsKk };
-const DATA_KEY = 'shag-app-v1';
+const DATA_KEY = 'shag-app-v2';
 const LANG_KEY = 'shag-lang';
 
 // localStorage может быть недоступен (приватный режим, превью) — тогда работаем в памяти
@@ -52,7 +52,7 @@ export function StoreProvider({ children }) {
       lessonsOf: (g) => lessons[g],
       blocksOf: (g) => [...new Set(lessons[g].map((l) => l.block))],
       kidBy: (id) => data.kids.find((k) => k.id === id),
-      kname: (k) => (k ? `${t.child} ${k.letter}.` : ''),
+      kname: (k) => (k ? k.name || `${t.child} ${k.letter || ''}`.trim() : ''),
       tx: (v) => (v && typeof v === 'object' ? v[lang] || v.ru : v),
       fmtDate: (d) => {
         try { return new Date(d + 'T00:00').toLocaleDateString(t.locale, { day: 'numeric', month: 'short' }); } catch { return d; }

@@ -1,3 +1,4 @@
+import { Play, Smile, PenLine } from 'lucide-react';
 import { useState } from 'react';
 import { useStore } from '../state/store.jsx';
 import { go } from '../state/router.js';
@@ -24,9 +25,9 @@ export default function Lesson({ g, n }) {
         <select style={{ width: 'auto' }} value={who} onChange={(e) => setWho(e.target.value)}>
           {kids.map((k) => <option key={k.id} value={k.id}>{kname(k)} ({t.gradeShort(k.grade)})</option>)}
         </select>
-        <button className="btn" onClick={() => go(`run/${who}/${g}/${n}`)}>{t.runLesson}</button>
-        <button className="btn ghost" onClick={() => openKid()}>{t.showKid}</button>
-        <button className="btn plain" onClick={() => go(`observe?kid=${who}&lesson=${n}`)}>{t.writeObs}</button>
+        <button className="btn" onClick={() => go(`run/${who}/${g}/${n}`)}><Play size={16} aria-hidden="true" />{t.runLesson}</button>
+        <button className="btn ghost" onClick={() => openKid()}><Smile size={16} aria-hidden="true" />{t.showKid}</button>
+        <button className="btn plain" onClick={() => go(`observe?kid=${who}&lesson=${n}`)}><PenLine size={16} aria-hidden="true" />{t.writeObs}</button>
       </div>
 
       <h3>{t.structure}</h3>

@@ -1,3 +1,4 @@
+import { Play, Pause, ChevronRight, Check, Smile } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useStore } from '../state/store.jsx';
 import { go } from '../state/router.js';
@@ -40,7 +41,7 @@ export default function Run({ kidId, g, n }) {
           {t.STAGES.map((s, i) => (
             <div key={i} className={'stage' + (i === idx ? ' now' : i < idx ? ' done' : '')} onClick={() => pick(i)}>
               <div className="tm">{STAGE_MIN[i][0]}–{STAGE_MIN[i][1]}′</div>
-              <div><b>{s[0]}{i < idx ? ' ✓' : ''}</b><br /><span className="small">{s[1]}</span></div>
+              <div><b style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>{s[0]}{i < idx && <Check size={15} aria-hidden="true" />}</b><br /><span className="small">{s[1]}</span></div>
             </div>
           ))}
         </div>
@@ -50,11 +51,11 @@ export default function Run({ kidId, g, n }) {
             <div className="timer" style={{ color: sec > STAGE_MIN[idx][1] * 60 ? 'var(--accent)' : undefined }}>{mm(sec)}</div>
             <div className="small muted">{t.total} {mm(total)}</div>
             <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 12, flexWrap: 'wrap' }}>
-              <button className="btn plain" onClick={() => setPaused((p) => !p)}>{paused ? t.resume : t.pause}</button>
-              <button className="btn" onClick={() => (last ? finish() : pick(idx + 1))}>{last ? t.finish : t.next}</button>
+              <button className="btn plain" onClick={() => setPaused((p) => !p)}>{paused ? <Play size={16} aria-hidden="true" /> : <Pause size={16} aria-hidden="true" />}{paused ? t.resume : t.pause}</button>
+              <button className="btn" onClick={() => (last ? finish() : pick(idx + 1))}>{last ? t.finish : t.next}{last ? <Check size={16} aria-hidden="true" /> : <ChevronRight size={16} aria-hidden="true" />}</button>
             </div>
           </div>
-          <button className="btn ghost" style={{ width: '100%', marginTop: 10, justifyContent: 'center' }} onClick={() => openKid()}>{t.showKid}</button>
+          <button className="btn ghost" style={{ width: '100%', marginTop: 10, justifyContent: 'center' }} onClick={() => openKid()}><Smile size={16} aria-hidden="true" />{t.showKid}</button>
           <button className="btn plain" style={{ width: '100%', marginTop: 8, justifyContent: 'center' }} onClick={finish}>{t.endEarly}</button>
           <div className="note" style={{ marginTop: 12 }}>{t.timerNote}</div>
         </div>

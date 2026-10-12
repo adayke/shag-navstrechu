@@ -1,3 +1,4 @@
+import { ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 import { useStore } from '../state/store.jsx';
 import { go } from '../state/router.js';
@@ -40,7 +41,7 @@ export default function Lessons() {
               <div className="row" onClick={() => go(`lesson/${grade}/${l.n}`)}>
                 <div className="n">{l.n}</div>
                 <div className="t"><b>{l.title}</b><span className="small muted">{l.goal}</span></div>
-                <span className="muted">›</span>
+                <ChevronRight size={18} className="chev" aria-hidden="true" />
               </div>
             </div>
           );

@@ -1,3 +1,4 @@
+import { Smile, Printer } from 'lucide-react';
 import { useStore, today } from '../state/store.jsx';
 import { useOpenKid } from '../components/KidMode.jsx';
 import Chart from '../components/Chart.jsx';
@@ -20,8 +21,8 @@ export function Cards() {
         ))}
       </div>
       <div className="toolbar noprint" style={{ marginTop: 16 }}>
-        <button className="btn" onClick={() => openKid()}>{t.openKid}</button>
-        <button className="btn plain" onClick={() => window.print()}>{t.print}</button>
+        <button className="btn" onClick={() => openKid()}><Smile size={16} aria-hidden="true" />{t.openKid}</button>
+        <button className="btn plain" onClick={() => window.print()}><Printer size={16} aria-hidden="true" />{t.print}</button>
       </div>
     </>
   );
@@ -70,7 +71,7 @@ export function Report({ id }) {
 
   return (
     <>
-      <Back to={'kid/' + k.id}>‹ {kname(k)}</Back>
+      <Back to={'kid/' + k.id}>{kname(k)}</Back>
       <h1>{t.repH}: {kname(k)}</h1>
       <p className="sub">{t.repSub(k.grade, k.next - 1, fmtDate(today()))}</p>
       <div className="card" style={{ overflowX: 'auto' }}>
@@ -92,7 +93,7 @@ export function Report({ id }) {
       <div className="card" style={{ marginTop: 14 }}><Chart kid={k} /></div>
       <div className="note" style={{ marginTop: 14 }}>{t.repNote}</div>
       <div className="toolbar noprint" style={{ marginTop: 16 }}>
-        <button className="btn" onClick={() => window.print()}>{t.repPrint}</button>
+        <button className="btn" onClick={() => window.print()}><Printer size={16} aria-hidden="true" />{t.repPrint}</button>
       </div>
     </>
   );

@@ -22,6 +22,8 @@ const ROWS = [
   ['a', 18, 0, 2, 11, 1, 0, 3], ['a', 18, 1, 1, 11, 1, 1, 4], ['a', 4, 1, 2, 13, 1, 0, 5],
   ['b', 35, 2, 1, 2, 2, 0, 6], ['b', 14, 2, 2, 6, 0, 3, 7], ['b', 14, 3, 1, 6, 1, 0, 8],
   ['c', 36, 4, 2, 2, 0, 0, 9], ['c', 16, 0, 3, 12, 0, 0, 10], ['c', 6, 4, 3, 18, 0, 1, 11],
+  ['d', 30, 3, 1, 3, 1, 0, 8], ['d', 9, 4, 2, 8, 0, 1, 9],
+  ['e', 25, 1, 1, 2, 1, 0, 1], ['e', 10, 0, 1, 3, 3, 0, 2], ['e', 3, 1, 2, 4, 1, 0, 4],
 ];
 
 const daysAgo = (d) => new Date(Date.now() - d * 864e5).toISOString().slice(0, 10);
@@ -29,10 +31,13 @@ export const uid = () => Math.random().toString(36).slice(2, 10);
 
 export function demoState() {
   return {
+    // Вымышленные дети для демонстрации. adapt — индексы из раздела «Адаптации».
     kids: [
-      { id: 'a', letter: 'А', grade: 1, goals: [0, 1], next: 13 },
-      { id: 'b', letter: 'Б', grade: 2, goals: [2, 3], next: 8 },
-      { id: 'c', letter: 'В', grade: 3, goals: [0, 4], next: 21 },
+      { id: 'a', name: 'Әлихан С.', age: 7, grade: 1, goals: [0, 1], next: 13, adapt: [0] },
+      { id: 'b', name: 'Аружан Т.', age: 8, grade: 2, goals: [2, 3], next: 8, adapt: [2] },
+      { id: 'c', name: 'Данияр М.', age: 9, grade: 3, goals: [0, 4], next: 21, adapt: [3] },
+      { id: 'd', name: 'Мадина К.', age: 10, grade: 4, goals: [3, 4], next: 10, adapt: [1] },
+      { id: 'e', name: 'Тимур Б.', age: 7, grade: 1, goals: [0, 1], next: 5, adapt: [4, 0] },
     ],
     obs: ROWS.map(([kid, d, goal, score, lesson, mode, ctx, ti]) => ({
       id: uid(), kid, date: daysAgo(d), goal, score, lesson, mode, ctx,

@@ -1,3 +1,4 @@
+import { ChevronRight } from 'lucide-react';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useStore } from '../state/store.jsx';
 import { Face } from './Faces.jsx';
@@ -62,8 +63,8 @@ function KidMode({ initialTab, initialCard, onClose }) {
             <div className="muted">{t.kSkip}</div>
             {mood && (
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
-                <button className="btn lg" onClick={() => setTab('str')}>{t.kHow}</button>
-                <button className="btn lg ghost" onClick={() => setTab('cards')}>{t.kHelp}</button>
+                <button className="btn lg" onClick={() => setTab('str')}>{t.kHow}<ChevronRight size={18} aria-hidden="true" /></button>
+                <button className="btn lg ghost" onClick={() => setTab('cards')}>{t.kHelp}<ChevronRight size={18} aria-hidden="true" /></button>
               </div>
             )}
           </>

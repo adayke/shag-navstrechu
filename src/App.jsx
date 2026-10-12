@@ -1,3 +1,4 @@
+import { House, BookOpen, Users, PenLine, LayoutGrid, Info, Languages } from 'lucide-react';
 import { useStore } from './state/store.jsx';
 import { go, useRoute } from './state/router.js';
 import { FaceSprites, Face } from './components/Faces.jsx';
@@ -13,7 +14,7 @@ import Observe from './pages/Observe.jsx';
 import { Cards, About, Report } from './pages/Other.jsx';
 
 const NAV = [
-  ['today', '◎'], ['lessons', '▤'], ['kids', '☺'], ['observe', '✎'], ['cards', '▣'], ['about', 'ⓘ'],
+  ['today', House], ['lessons', BookOpen], ['kids', Users], ['observe', PenLine], ['cards', LayoutGrid], ['about', Info],
 ];
 // к какому пункту меню относятся вложенные страницы
 const PARENT = { lesson: 'lessons', run: 'lessons', kid: 'kids', report: 'kids' };
@@ -34,24 +35,39 @@ function Page({ route }) {
   }
 }
 
-export default function App() {
+function LangSwitch() {
   const { t, lang, setLang } = useStore();
+  return (
+    <div className="lang" role="group" aria-label={t.lang}>
+      <Languages size={16} className="lang-ic" aria-hidden="true" />
+      <button className={lang === 'ru' ? 'on' : ''} onClick={() => setLang('ru')}>RU</button>
+      <button className={lang === 'kk' ? 'on' : ''} onClick={() => setLang('kk')}>ҚАЗ</button>
+    </div>
+  );
+}
+
+export default function App() {
+  const { t } = useStore();
   const route = useRoute();
   const active = PARENT[route.name] || route.name;
 
   return (
     <KidModeProvider>
       <FaceSprites />
+      {/* шапка — только на телефоне */}
+      <header className="mtop">
+        <button className="logo" onClick={() => go('today')}><Face id="calm" size={28} />Шаг навстречу</button>
+        <LangSwitch />
+      </header>
       <div className="app">
         <nav className="side">
           <div className="logo"><Face id="calm" size={30} />Шаг навстречу</div>
-          <div className="lang">
-            <button className={lang === 'ru' ? 'on' : ''} onClick={() => setLang('ru')}>RU</button>
-            <button className={lang === 'kk' ? 'on' : ''} onClick={() => setLang('kk')}>ҚАЗ</button>
-          </div>
-          {NAV.map(([key, ic]) => (
-            <button key={key} className={'nav-btn' + (active === key ? ' on' : '')} onClick={() => go(key)}>
-              <span className="ic">{ic}</span>{t.nav[key]}
+          <LangSwitch />
+          {NAV.map(([key, Icon]) => (
+            <button key={key} className={'nav-btn' + (active === key ? ' on' : '')} onClick={() => go(key)} aria-current={active === key ? 'page' : undefined}>
+              <Icon size={19} strokeWidth={2} aria-hidden="true" />
+              <span className="full">{t.nav[key]}</span>
+              <span className="short">{t.navShort[key]}</span>
             </button>
           ))}
           <div className="side-foot">{t.foot}</div>
