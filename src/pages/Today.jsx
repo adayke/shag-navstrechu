@@ -3,9 +3,10 @@ import { useStore } from '../state/store.jsx';
 import { go } from '../state/router.js';
 import { useOpenKid } from '../components/KidMode.jsx';
 import { Avatar, ObsRow } from '../components/ui.jsx';
+import { blockIndex } from '../components/LessonCard.jsx';
 
 export default function Today() {
-  const { t, kids, obs, lessonOf, kname } = useStore();
+  const { t, kids, obs, lessonOf, kname, blocksOf } = useStore();
   const openKid = useOpenKid();
   const last = [...obs].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 4);
 
@@ -17,7 +18,7 @@ export default function Today() {
         {kids.map((k) => {
           const l = lessonOf(k.grade, k.next);
           return (
-            <div className="card" key={k.id}>
+            <div className={`glow b${blockIndex(blocksOf, k.grade, l.block) + 1}`} key={k.id}>
               <div className="kid-head" style={{ cursor: 'pointer' }} onClick={() => go('kid/' + k.id)}>
                 <Avatar kid={k} size={36} />
                 <div><b>{kname(k)}</b><div className="small muted">{t.grade(k.grade)} · {t.meet(k.next)}</div></div>
@@ -30,7 +31,7 @@ export default function Today() {
           );
         })}
       </div>
-      <div className="grid g4" style={{ marginTop: 14 }}>
+      <div className="grid g4 stats" style={{ marginTop: 16 }}>
         <div className="card stat"><b>136</b><span className="muted small">{t.statLessons}</span></div>
         <div className="card stat"><b>{kids.length}</b><span className="muted small">{t.statKids}</span></div>
         <div className="card stat"><b>{obs.length}</b><span className="muted small">{t.statObs}</span></div>

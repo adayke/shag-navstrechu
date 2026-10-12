@@ -1,51 +1,80 @@
-import { ChevronRight } from 'lucide-react';
 import { useState } from 'react';
+import { SlidersHorizontal, Search } from 'lucide-react';
 import { useStore } from '../state/store.jsx';
-import { go } from '../state/router.js';
-import { Chip } from '../components/ui.jsx';
+import LessonCard, { blockIndex } from '../components/LessonCard.jsx';
 
+// Каталог занятий: фильтры слева (класс, направление), поиск и сортировка сверху, карточки сеткой
 export default function Lessons() {
-  const { t, lessonsOf, blocksOf } = useStore();
-  const [grade, setGrade] = useState(1);
-  const [block, setBlock] = useState(-1);
+  const { t, kids, lessonsOf, blocksOf, kname } = useStore();
+  const [grades, setGrades] = useState([1]);
+  const [btypes, setBtypes] = useState([]);
   const [q, setQ] = useState('');
+  const [sort, setSort] = useState('order');
+  const [open, setOpen] = useState(false);
 
-  const blocks = blocksOf(grade);
+  const toggle = (arr, set, v) => set(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
   const query = q.trim().toLowerCase();
-  const items = lessonsOf(grade).filter((l) =>
-    (block === -1 || l.block === blocks[block]) &&
-    (!query || (l.title + ' ' + l.goal + ' ' + l.result).toLowerCase().includes(query)));
+  const useGrades = grades.length ? grades : [1, 2, 3, 4];
 
-  let cur = '';
+  let items = useGrades.flatMap((g) => lessonsOf(g).map((l) => ({ g, l, bi: blockIndex(blocksOf, g, l.block) })))
+    .filter(({ l, bi }) => (!btypes.length || btypes.includes(bi)) &&
+      (!query || (l.title + ' ' + l.goal + ' ' + l.result + ' ' + l.block).toLowerCase().includes(query)));
+  if (sort === 'az') items = [...items].sort((a, b) => a.l.title.localeCompare(b.l.title));
+
+  // какие занятия у детей следующие — подсвечиваем
+  const hot = {};
+  kids.forEach((k) => { hot[`${k.grade}/${k.next}`] = hot[`${k.grade}/${k.next}`] || kname(k); });
+
+  const countFor = (bi) => useGrades.reduce((s, g) => s + lessonsOf(g).filter((l) => blockIndex(blocksOf, g, l.block) === bi).length, 0);
+
   return (
     <>
       <h1>{t.nav.lessons}</h1>
       <p className="sub">{t.lessonsSub}</p>
-      <div className="toolbar">
-        <div>{[1, 2, 3, 4].map((g) => <Chip key={g} on={grade === g} onClick={() => { setGrade(g); setBlock(-1); }}>{t.grade(g)}</Chip>)}</div>
-        <div style={{ flex: 1, minWidth: 200 }}>
-          <input type="search" placeholder={t.search} value={q} onChange={(e) => setQ(e.target.value)} />
-        </div>
-      </div>
-      <div style={{ marginBottom: 8 }}>
-        <Chip on={block === -1} onClick={() => setBlock(-1)}>{t.allBlocks}</Chip>
-        {blocks.map((b, i) => <Chip key={b} on={block === i} onClick={() => setBlock(i)}>{b}</Chip>)}
-      </div>
-      <div className="list">
-        {items.length === 0 && <div className="empty">{t.nothing}</div>}
-        {items.map((l) => {
-          const header = l.block !== cur ? (cur = l.block) : null;
-          return (
-            <div key={l.n}>
-              {header && <div className="block-h">{header}</div>}
-              <div className="row" onClick={() => go(`lesson/${grade}/${l.n}`)}>
-                <div className="n">{l.n}</div>
-                <div className="t"><b>{l.title}</b><span className="small muted">{l.goal}</span></div>
-                <ChevronRight size={18} className="chev" aria-hidden="true" />
-              </div>
-            </div>
-          );
-        })}
+      <div className="catalog">
+        <aside className={'filters' + (open ? ' open' : '')}>
+          <div className="filters-head">
+            <b><SlidersHorizontal size={16} aria-hidden="true" />{t.filters}</b>
+            <button className="linkbtn" onClick={() => { setGrades([]); setBtypes([]); setQ(''); }}>{t.clearAll}</button>
+          </div>
+          <div className="fgroup">
+            <div className="fgroup-t">{t.fGrade}</div>
+            {[1, 2, 3, 4].map((g) => (
+              <label className="check" key={g}>
+                <input type="checkbox" checked={grades.includes(g)} onChange={() => toggle(grades, setGrades, g)} />
+                {t.grade(g)}<span className="cnt">34</span>
+              </label>
+            ))}
+          </div>
+          <div className="fgroup">
+            <div className="fgroup-t">{t.fBlock}</div>
+            {t.btypes.map((name, bi) => (
+              <label className={`check b${bi + 1}`} key={bi}>
+                <input type="checkbox" checked={btypes.includes(bi)} onChange={() => toggle(btypes, setBtypes, bi)} />
+                <span className="dot" />{name}<span className="cnt">{countFor(bi)}</span>
+              </label>
+            ))}
+          </div>
+        </aside>
+
+        <section>
+          <div className="searchrow">
+            <label className="search">
+              <Search size={17} aria-hidden="true" />
+              <input type="search" placeholder={t.search} value={q} onChange={(e) => setQ(e.target.value)} aria-label={t.search} />
+            </label>
+            <button className="btn ghost mfilter" onClick={() => setOpen((o) => !o)}><SlidersHorizontal size={16} aria-hidden="true" />{t.filters}</button>
+            <select className="select" value={sort} onChange={(e) => setSort(e.target.value)} aria-label="sort">
+              <option value="order">{t.sortOrder}</option>
+              <option value="az">{t.sortAz}</option>
+            </select>
+          </div>
+          <div className="found">{t.found(items.length)}</div>
+          {items.length === 0 && <div className="empty">{t.nothing}</div>}
+          <div className="grid g3">
+            {items.map(({ g, l }) => <LessonCard key={g + '-' + l.n} g={g} l={l} hotFor={hot[`${g}/${l.n}`]} />)}
+          </div>
+        </section>
       </div>
     </>
   );
