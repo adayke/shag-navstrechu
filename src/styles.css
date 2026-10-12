@@ -213,8 +213,8 @@ table.rep td, table.rep th { padding: 10px 8px; border-bottom: 1px solid var(--l
   background: var(--brand-soft); color: var(--brand); font-weight: 700; font-size: 13px; display: grid; place-items: center; }
 .doc .dnote { border-left: 3px solid var(--accent); background: var(--accent-soft); padding: 10px 14px; border-radius: 0 12px 12px 0; margin: 10px 0 12px; font-size: 14px; }
 .doc figure { margin: 12px 0 16px; }
-.doc figure img { display: block; border-radius: 14px; background: #fff; border: 1px solid var(--line); max-height: 520px; object-fit: contain; }
-.doc figure.mini img { max-height: 120px; max-width: 360px; }
+.doc figure img { display: block; max-width: 100%; height: auto; border-radius: 14px; background: #fff; border: 1px solid var(--line); max-height: 520px; object-fit: contain; }
+.doc figure.mini img { max-height: 120px; max-width: min(360px, 100%); }
 .doc figcaption { font-size: 12px; color: var(--faint); margin-top: 6px; }
 .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 18px; overflow-x: auto; }
 .tabs button { border: 0; background: none; padding: 10px 14px; color: var(--muted); font-weight: 600; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
@@ -246,7 +246,7 @@ table.rep td, table.rep th { padding: 10px 8px; border-bottom: 1px solid var(--l
 /* ===== Планшет ===== */
 @media (max-width: 1100px) {
   .g3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .lesson-layout { grid-template-columns: 1fr; }
+  .lesson-layout { grid-template-columns: minmax(0, 1fr); }
   .aside { position: static; }
 }
 
@@ -292,3 +292,7 @@ table.rep td, table.rep th { padding: 10px 8px; border-bottom: 1px solid var(--l
 .logo-mark { width: 32px; height: 32px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; flex: none;
   color: var(--brand-ink); background: linear-gradient(135deg, var(--brand), color-mix(in srgb, var(--brand) 55%, var(--c2))); transform: rotate(-8deg); }
 .logo-mark svg { transform: rotate(8deg); }
+/* колонки сетки не растягиваются под широкие картинки */
+.lesson-layout > *, .catalog > *, .grid > * { min-width: 0; }
+.doc { overflow-wrap: anywhere; }
+.doc figure { max-width: 100%; }
